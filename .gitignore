@@ -1,0 +1,94 @@
+﻿# ============================================
+# Toxic People Wallet - .gitignore
+# ASP.NET Core / Visual Studio
+# ============================================
+
+# Build output
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# ============================================
+# Uploaded payment screenshots
+# ============================================
+
+wwwroot/uploads/
+wwwroot/uploads/**
+
+# ============================================
+# Local database files / backups
+# ============================================
+
+*.mdf
+*.ldf
+*.bak
+
+# ============================================
+# Logs
+# ============================================
+
+*.log
+logs/
+Logs/
+
+# ============================================
+# Temporary files
+# ============================================
+
+*.tmp
+*.temp
+*.swp
+*.swo
+~$*
+
+# ============================================
+# Test / coverage output
+# ============================================
+
+TestResults/
+coverage/
+coverage.*
+
+# ============================================
+# NuGet generated files/packages
+# ============================================
+
+packages/
+*.nupkg
+*.snupkg
+
+# ============================================
+# Publish output
+# ============================================
+
+publish/
+PublishProfiles/
+
+# ============================================
+# OS generated files
+# ============================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================
+# Local secrets / environment files
+# ============================================
+
+.env
+.env.*
+secrets.json
