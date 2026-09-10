@@ -456,6 +456,86 @@
             font-size: 12px;
         }
 
+    /* =========================================================
+       PAYMENT QR
+       ========================================================= */
+
+    .deposit-qr-card {
+        background: #ffffff;
+        border: 1px solid #e9e7f5;
+        border-radius: 18px;
+        padding: 22px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 24px rgba(32, 24, 75, 0.06);
+    }
+
+    .deposit-qr-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .deposit-qr-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f1efff;
+        color: #6757e8;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .deposit-qr-header h5 {
+        margin: 0 0 3px;
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .deposit-qr-header p {
+        margin: 0;
+        color: #7b7890;
+        font-size: 13px;
+    }
+
+    .deposit-qr-image-wrap {
+        display: flex;
+        justify-content: center;
+        padding: 12px;
+        margin-bottom: 16px;
+        background: #fafafa;
+        border: 1px dashed #ddd9f3;
+        border-radius: 15px;
+    }
+
+    .deposit-qr-image {
+        display: block;
+        width: 100%;
+        max-width: 210px;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .deposit-qr-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        padding: 12px;
+        background: #f8f7ff;
+        border-radius: 12px;
+        color: #666276;
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+        .deposit-qr-note i {
+            color: #6757e8;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
 
     /* =========================================================
            RESPONSIVE
@@ -782,7 +862,40 @@
 
         </div>
 
+        <!-- =================================================
+        PAYMENT QR
+        ================================================= -->
 
+        <div class="deposit-qr-card">
+
+            <div class="deposit-qr-header">
+                <div class="deposit-qr-icon">
+                    <i class="bi bi-qr-code"></i>
+                </div>
+
+                <div>
+                    <h5>Scan to Pay</h5>
+                    <p>Pay using any supported UPI app</p>
+                </div>
+            </div>
+
+            <div class="deposit-qr-image-wrap">
+                <img src="~/images/payment-qr.png"
+                     asp-append-version="true"
+                     alt="Payment QR Code"
+                     class="deposit-qr-image" />
+            </div>
+
+            <div class="deposit-qr-note">
+                <i class="bi bi-info-circle"></i>
+
+                <span>
+                    Scan the QR code, complete your payment, then enter the
+                    transaction reference and upload the payment screenshot.
+                </span>
+            </div>
+
+        </div>
 
         <!-- =================================================
              SIDE GUIDE
