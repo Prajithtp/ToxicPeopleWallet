@@ -499,7 +499,17 @@
                 background: #df4b60;
             }
 
+        .member-action-btn.delete {
+            color: #b42318;
+            border: 1px solid #f3c6c2;
+            background: #fff7f6;
+        }
 
+            .member-action-btn.delete:hover {
+                color: #fff;
+                border-color: #d92d20;
+                background: #d92d20;
+            }
     /* =========================================================
            EMPTY STATE
            ========================================================= */
@@ -1099,6 +1109,27 @@
 
                                             </form>
                                         }
+                                        <!-- DELETE -->
+                                        <form asp-controller="Admin"
+                                              asp-action="DeleteMember"
+                                              method="post"
+                                              class="d-inline">
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@member.UserId" />
+
+                                            <button type="submit"
+                                                    class="member-action-btn delete"
+                                                    onclick="return confirm('Permanently delete @member.FullName? This is only allowed when the member has no transaction history and a zero wallet balance.');">
+
+                                                <i class="bi bi-trash"></i>
+
+                                                Delete
+
+                                            </button>
+
+                                        </form>
 
                                     </div>
 

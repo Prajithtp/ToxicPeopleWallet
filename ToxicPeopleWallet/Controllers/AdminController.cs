@@ -1622,5 +1622,128 @@ namespace ToxicPeopleWallet.Controllers
 
             return RedirectToAction(nameof(Users));
         }
+        // -------------------------------------------------
+        // Delete Member Account
+        // -------------------------------------------------
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteMember(string id)
+        {
+            // ---------------------------------------------
+            // Validate User Id
+            // ---------------------------------------------
+
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                TempData["ErrorMessage"] =
+                    "Member could not be found.";
+
+                return RedirectToAction(nameof(Users));
+            }
+
+
+            // ---------------------------------------------
+            // Find User
+            // ---------------------------------------------
+
+            var user =
+                await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] =
+                    "Member could not be found.";
+
+                return RedirectToAction(nameof(Users));
+            }
+
+
+            // ---------------------------------------------
+            // Protect Current Admin Account
+            // ---------------------------------------------
+
+            var currentAdminId =
+                _userManager.GetUserId(User);
+
+            if (user.Id == currentAdminId)
+            {
+                TempData["ErrorMessage"] =
+                    "You cannot delete your own account.";
+
+                return RedirectToAction(nameof(Users));
+            }
+
+
+            // ---------------------------------------------
+            // Only Member accounts can be deleted here
+            // ---------------------------------------------
+
+            var isMember =
+                await _userManager.IsInRoleAsync(
+                    user,
+                    "Member");
+
+            if (!isMember)
+            {
+                TempData["ErrorMessage"] =
+                    "Only member accounts can be deleted.";
+
+                return RedirectToAction(nameof(Users));
+            }
+
+
+            // ---------------------------------------------
+            // Protect Wallet History
+            // ---------------------------------------------
+
+            var hasTransactions =
+                await _context.WalletTransactions
+                    .AsNoTracking()
+                    .AnyAsync(x => x.UserId == user.Id);
+
+            if (hasTransactions)
+            {
+                TempData["ErrorMessage"] =
+                    "This member cannot be deleted because transaction history exists. Disable the account instead.";
+
+                return RedirectToAction(nameof(Users));
+            }
+
+
+            // ---------------------------------------------
+            // Member balance must be zero
+            // ---------------------------------------------
+
+            if (user.CurrentBalance != 0)
+            {
+                TempData["ErrorMessage"] =
+                    "This member cannot be deleted because the wallet balance is not zero.";
+
+                return RedirectToAction(nameof(Users));
+            }
+
+
+            // ---------------------------------------------
+            // Delete Identity User
+            // ---------------------------------------------
+
+            var result =
+                await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+            {
+                TempData["ErrorMessage"] =
+                    "Unable to delete the member account.";
+
+                return RedirectToAction(nameof(Users));
+            }
+
+
+            TempData["SuccessMessage"] =
+                $"{user.FullName}'s account has been deleted permanently.";
+
+            return RedirectToAction(nameof(Users));
+        }
     }
 }
