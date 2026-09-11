@@ -1,160 +1,151 @@
-﻿# 💰 Toxic People Wallet
+# Toxic People Wallet
 
-**Toxic People Wallet** is a shared wallet and expense tracking web application built using **ASP.NET Core MVC**.
+A shared wallet and expense-management web application built with **ASP.NET Core MVC**, **Entity Framework Core**, **SQL Server**, and **ASP.NET Core Identity**.
 
-The application allows a group of friends to maintain a shared wallet, submit deposit and expense requests, track individual contributions, and view the complete group transaction history.
+The application is designed for a small group of friends to record deposits and shared expenses, maintain individual balances, and manage wallet activity through an admin approval workflow.
 
-An administrator reviews and approves or rejects transaction requests before they affect wallet balances.
+## Live Demo
 
----
+**AWS Elastic Beanstalk:**  
+http://toxicpeoplewallet.ap-south-1.elasticbeanstalk.com
 
-## ✨ Features
+## Features
 
-### 👤 Member
-
-- Register and login securely
-- View personal wallet dashboard
-- View group wallet balance
+### Member Features
+- Register and log in securely
+- View personal wallet balance
+- View total group wallet balance
 - Submit deposit requests
-- Upload payment proof for deposits
-- Submit expense/withdrawal requests
-- Track pending, approved, and rejected transactions
+- Scan a payment QR code before submitting a deposit request
+- Enter payment reference number and payment date
+- Upload payment proof/screenshot
+- Submit withdrawal / expense requests
 - View personal transaction history
-- View group passbook
-- View member contribution details
+- View the shared group passbook
+- Track pending, approved, and rejected requests
 
-### 🛡️ Admin
-
-- Dedicated admin dashboard
-- View group wallet statistics
-- Review pending transaction requests
-- Preview deposit payment proofs
-- Approve deposit and expense requests
-- Reject requests with a reason
-- View reports and transaction history
-- View member wallet details
+### Admin Features
+- Admin dashboard with wallet statistics
+- Review pending deposit and withdrawal requests
+- Approve or reject transactions
+- Add rejection reasons
+- View payment proof submitted by members
+- View transaction reports
+- Manage members
 - Enable or disable member accounts
-- Monitor member contributions and balances
+- Safely delete members with no balance and no transaction history
+- View member details and transaction history
+- View the complete group passbook
 
----
-
-## 💳 Transaction Workflow
+## Transaction Workflow
 
 ### Deposit
+1. Member scans the payment QR code.
+2. Member completes the payment externally.
+3. Member enters the amount, reference number, and payment date.
+4. Member uploads a payment screenshot.
+5. Admin verifies the payment.
+6. Admin approves the request.
+7. Member and group wallet balances are updated.
 
-```text
-Member submits deposit
-        ↓
-Deposit becomes Pending
-        ↓
-Admin verifies payment proof
-        ↓
-Admin approves request
-        ↓
-Member balance increases
-        ↓
-Group wallet balance increases
-```
+### Withdrawal / Expense
+1. Member submits an expense or withdrawal request.
+2. Admin reviews the request.
+3. Admin approves or rejects it.
+4. Approved transactions reduce the appropriate wallet balance.
 
-### Expense
+> The application is a manual ledger system. It does not connect directly to a bank or payment gateway.
 
-```text
-Member submits expense
-        ↓
-Expense becomes Pending
-        ↓
-Admin reviews request
-        ↓
-Admin approves request
-        ↓
-Member balance decreases
-        ↓
-Group wallet balance decreases
-```
+## Tech Stack
 
-Rejected requests do not modify wallet balances.
+- **ASP.NET Core MVC**
+- **.NET 9**
+- **C#**
+- **Entity Framework Core**
+- **SQL Server**
+- **ASP.NET Core Identity**
+- **Razor Views**
+- **Bootstrap**
+- **HTML5**
+- **CSS3**
+- **JavaScript**
+- **AWS Elastic Beanstalk**
+- **Amazon RDS for SQL Server**
+- **Amazon S3**
+- **Git & GitHub**
 
----
-
-## 🛠️ Technologies Used
-
-- ASP.NET Core MVC
-- C#
-- .NET 9
-- Entity Framework Core
-- ASP.NET Core Identity
-- SQL Server
-- LINQ
-- Razor Views
-- HTML5
-- CSS3
-- Bootstrap
-- Bootstrap Icons
-- JavaScript
-- Visual Studio 2022
-
----
-
-## 🏗️ Project Structure
+## Project Structure
 
 ```text
 ToxicPeopleWallet
-│
 ├── Controllers
 ├── Data
-├── Migrations
 ├── Models
 │   └── Enums
 ├── ViewModels
 ├── Views
+│   ├── Admin
+│   ├── Transactions
+│   ├── Wallet
+│   └── Passbook
 ├── wwwroot
-│   ├── css
-│   └── js
-│
+│   ├── images
+│   └── uploads
 ├── Program.cs
 ├── appsettings.json
 └── ToxicPeopleWallet.csproj
 ```
 
----
+## Main Models
 
-## 🔐 Authentication & Authorization
+### ApplicationUser
+Extends ASP.NET Core Identity and stores:
+- Full name
+- Email
+- Phone number
+- Current wallet balance
+- Account status
 
-The project uses **ASP.NET Core Identity** for authentication and role-based authorization.
+### WalletTransaction
+Stores wallet activity including:
+- Member
+- Amount
+- Transaction type
+- Category
+- Purpose
+- Payment reference
+- Payment date
+- Screenshot / payment proof
+- Approval status
+- Approval information
+- Rejection reason
 
-Two roles are available:
+### GroupWallet
+Stores the current shared wallet balance.
 
-- **Admin**
-- **Member**
+## Roles
 
-Admin-only functionality is protected using role-based authorization.
+The application uses role-based authorization with two roles:
 
----
+### Admin
+Can manage users, approve or reject requests, view reports, and monitor wallet activity.
 
-## 🗄️ Database
+### Member
+Can submit transactions and view wallet information and transaction history.
 
-The application uses **SQL Server** with **Entity Framework Core**.
+## Database
 
-Main application entities include:
+The project uses **Entity Framework Core with SQL Server**.
 
-- ApplicationUser
-- WalletTransaction
-- GroupWallet
+For local development, update the `DefaultConnection` connection string in `appsettings.json` or use a secure local configuration method.
 
-Transaction states include:
+Then apply migrations:
 
-- Pending
-- Approved
-- Rejected
+```bash
+dotnet ef database update
+```
 
-Transaction types include:
-
-- Deposit
-- Withdrawal
-
----
-
-## 🚀 Getting Started
+## Run Locally
 
 ### 1. Clone the repository
 
@@ -162,13 +153,19 @@ Transaction types include:
 git clone https://github.com/Prajithtp/ToxicPeopleWallet.git
 ```
 
-### 2. Open the project
+### 2. Open the project folder
 
-Open the solution/project using **Visual Studio 2022**.
+```bash
+cd ToxicPeopleWallet
+```
 
-### 3. Configure SQL Server
+### 3. Restore packages
 
-The development configuration uses SQL Server Express.
+```bash
+dotnet restore
+```
+
+### 4. Configure the database connection
 
 Example:
 
@@ -178,27 +175,7 @@ Example:
 }
 ```
 
-Change the connection string if your SQL Server configuration is different.
-
-### 4. Restore packages
-
-Visual Studio normally restores the required NuGet packages automatically.
-
-Alternatively:
-
-```bash
-dotnet restore
-```
-
-### 5. Create the database
-
-Using Visual Studio Package Manager Console:
-
-```powershell
-Update-Database
-```
-
-Or using the .NET CLI:
+### 5. Apply migrations
 
 ```bash
 dotnet ef database update
@@ -206,62 +183,56 @@ dotnet ef database update
 
 ### 6. Run the application
 
-Using Visual Studio:
-
-```text
-Ctrl + F5
-```
-
-Or:
-
 ```bash
-dotnet run
+dotnet run --project ToxicPeopleWallet
 ```
 
----
+You can also open the solution in **Visual Studio 2022** and run it from there.
 
-## 📱 Responsive Design
+## Security Notes
 
-The application includes a responsive interface designed for:
+- Passwords are handled using ASP.NET Core Identity.
+- Admin-only pages use role-based authorization.
+- Transaction approval is restricted to administrators.
+- Deposit proof uploads are validated by file type and size.
+- Sensitive production credentials are not stored in this repository.
+- AWS database credentials should be configured through environment variables or another secure secrets mechanism.
 
-- Desktop
-- Tablet
-- Mobile
+## Deployment
 
-It includes a responsive sidebar, dashboards, cards, forms, transaction tables, reports, and administrative pages.
+The application is deployed on AWS using:
+- **Elastic Beanstalk** for the ASP.NET Core application
+- **Amazon RDS SQL Server Express** for the production database
+- **Amazon S3** for Elastic Beanstalk deployment packages
 
----
+## Current Version
 
-## 📌 Project Purpose
+### Version 3
+Recent improvements include:
+- Fixed Admin Dashboard Passbook navigation
+- Added payment QR code to the Deposit Request page
+- Added safe member deletion
+- Improved responsive Admin and Member interfaces
+- Enhanced transaction and user-management workflows
 
-This project was developed as a portfolio project to demonstrate practical experience with:
+## Future Improvements
 
-- ASP.NET Core MVC architecture
-- Entity Framework Core
-- SQL Server database operations
-- ASP.NET Core Identity
-- Role-based authorization
-- CRUD operations
-- File uploads
-- Transaction approval workflows
-- LINQ
-- Razor Views
-- Responsive UI development
+- HTTPS with a custom domain
+- Cloud-based storage for uploaded payment screenshots
+- Email notifications
+- Better audit logging
+- Export reports to PDF or Excel
+- Improved dashboard charts
+- Automated CI/CD deployment
+- Payment gateway integration
 
----
+## Author
 
-## ⚠️ Disclaimer
+**Prajith TP**  
+.NET / Full-Stack Developer
 
-This application is a **portfolio/demo project**.
+GitHub: https://github.com/Prajithtp
 
-Wallet transactions are recorded manually and the application is not connected to a real banking or payment gateway system.
+## License
 
----
-
-## 👨‍💻 Developer
-
-**Prajith TP**
-
-.NET Full Stack Developer
-
-Technologies: C#, ASP.NET Core MVC, Entity Framework Core, SQL Server, HTML, CSS, JavaScript and Angular.
+This project was created for learning, portfolio, and small-group wallet-management purposes.
